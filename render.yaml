@@ -1,0 +1,8 @@
+yaml
+
+services:
+  - type: web
+    name: milkilottery
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
