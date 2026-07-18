@@ -1,0 +1,191 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Online App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style> .page { display: none; } .active-page { display: block; } </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 pb-20">
+
+    <nav class="bg-blue-600 p-4 text-white flex justify-between items-center shadow-md">
+        <span class="font-bold text-lg"><i class="fa-solid fa-ticket-simple"></i> Ticket Hub</span>
+        <select onchange="changeLanguage(this.value)" class="bg-blue-700 text-white rounded p-1 text-sm border-none">
+            <option value="or">Oromoo</option>
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+        </select>
+        <button onclick="switchPage('admin-login-page')" class="text-sm bg-blue-800 px-3 py-1 rounded"><i class="fa-solid fa-user-gear"></i> Admin</button>
+    </nav>
+
+    <div class="container mx-auto p-4 max-w-md bg-white min-h-screen shadow-lg rounded-t-xl mt-2">
+        <div class="bg-gray-200 p-2 rounded mb-4 text-center text-xs text-gray-600 font-semibold">
+            <i class="fa-solid fa-user-tie"></i> Manager: <span id="admin-name">Hunde Tesfaye Jule</span>
+        </div>
+
+        <!-- USER HOME PAGE -->
+        <div id="home-page" class="page active-page">
+            <div class="bg-white rounded-lg border p-4 shadow-sm mb-4">
+                <img id="prize-img" src="https://via.placeholder.com/350x150" class="w-full h-40 object-cover rounded mb-2">
+                <h2 id="campaign-title" class="font-bold text-xl text-gray-800">Carraa Gootaa</h2>
+                <p class="text-sm text-gray-600 mt-1"><i class="fa-solid fa-money-bill-wave text-green-500"></i> Ticket 1: <b id="ticket-cost">100 ETB</b></p>
+                
+                <div class="bg-red-50 p-2 rounded my-3 text-center border border-red-200">
+                    <span id="countdown" class="font-mono text-lg font-bold text-red-600">00d : 00h : 00m : 00s</span>
+                </div>
+
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span id="ticket-percent" class="font-bold">0% Sold</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="progress-bar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div></div>
+                    <div class="flex justify-between text-xs pt-1">
+                        <span class="text-green-600 font-bold">Available: <span id="tickets-left">0</span></span>
+                        <span class="text-red-600 font-bold">Sold: <span id="tickets-sold">0</span></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-blue-50 rounded text-xs">
+                    <p>🏆 1st: <span id="p1">-</span></p>
+                    <p>🥈 2nd: <span id="p2">-</span></p>
+                    <p>🥉 3rd: <span id="p3">-</span></p>
+                </div>
+
+                <button onclick="switchPage('buy-page')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold mt-4"><i class="fa-solid fa-cart-shopping"></i> Buy Ticket</button>
+            </div>
+        </div>
+
+        <!-- BUY PAGE -->
+        <div id="buy-page" class="page">
+            <button onclick="switchPage('home-page')" class="text-blue-600 mb-4 text-sm font-semibold"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <form id="order-form" onsubmit="submitOrder(event)" class="space-y-4">
+                <input type="text" name="full_name" placeholder="Full Name" required class="w-full border p-2 rounded">
+                <input type="tel" name="phone_number" placeholder="Phone Number" required class="w-full border p-2 rounded">
+                <input type="number" name="ticket_count" placeholder="Number of Tickets" min="1" required class="w-full border p-2 rounded">
+
+                <div class="bg-gray-50 p-3 rounded border space-y-2">
+                    <div class="flex justify-between items-center bg-white p-2 border rounded">
+                        <div><span class="text-xs font-bold text-purple-950">CBE:</span> <code class="text-xs">1000512022433</code></div>
+                        <button type="button" onclick="copyText('1000512022433')" class="text-xs bg-gray-200 px-2 py-1 rounded">Copy</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-white p-2 border rounded">
+                        <div><span class="text-xs font-bold text-cyan-600">Telebirr:</span> <code class="text-xs">0910020814</code></div>
+                        <button type="button" onclick="copyText('0910020814')" class="text-xs bg-gray-200 px-2 py-1 rounded">Copy</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">Upload Screenshot (< 10MB)</label>
+                    <input type="file" name="screenshot" accept="image/*" required onchange="validateFile(this)" class="w-full text-sm mt-1">
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">Submit Payment</button>
+            </form>
+        </div>
+
+        <!-- ADMIN LOGIN -->
+        <div id="admin-login-page" class="page">
+            <button onclick="switchPage('home-page')" class="text-blue-600 mb-4 text-sm font-semibold">Back</button>
+            <div class="space-y-4">
+                <input type="text" id="admin-user" placeholder="Username" class="w-full border p-2 rounded">
+                <input type="password" id="admin-pass" placeholder="Password" class="w-full border p-2 rounded">
+                <button onclick="loginAdmin()" class="w-full bg-blue-600 text-white py-2 rounded font-bold">Login</button>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD -->
+        <div id="admin-dashboard-page" class="page">
+            <h2 class="font-bold text-xl text-red-600 mb-4">Admin Dashboard</h2>
+            <div class="bg-gray-50 p-3 rounded border mb-4 space-y-2">
+                <input type="text" id="edit-p1" placeholder="1st Prize" class="w-full border p-2 rounded text-sm">
+                <input type="text" id="edit-p2" placeholder="2nd Prize" class="w-full border p-2 rounded text-sm">
+                <input type="text" id="edit-p3" placeholder="3rd Prize" class="w-full border p-2 rounded text-sm">
+                <input type="number" id="edit-price" placeholder="Ticket Price" class="w-full border p-2 rounded text-sm">
+                <input type="text" id="edit-img" placeholder="Image URL" class="w-full border p-2 rounded text-sm">
+                <button onclick="updateCampaign()" class="w-full bg-blue-600 text-white py-2 rounded text-sm font-bold">Save Changes</button>
+            </div>
+            <div id="admin-pending-list" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchConfig() {
+            const res = await fetch('/api/config');
+            const config = await res.json();
+            document.getElementById('admin-name').innerText = config.admin_name;
+            document.getElementById('ticket-cost').innerText = config.ticket_price + " ETB";
+            document.getElementById('p1').innerText = config.prize_1st;
+            document.getElementById('p2').innerText = config.prize_2nd;
+            document.getElementById('p3').innerText = config.prize_3rd;
+            if(config.prize_image) document.getElementById('prize-img').src = config.prize_image;
+            
+            const left = config.total_tickets - config.sold_tickets;
+            const percent = Math.round((config.sold_tickets / config.total_tickets) * 100);
+            document.getElementById('tickets-left').innerText = left;
+            document.getElementById('tickets-sold').innerText = config.sold_tickets;
+            document.getElementById('ticket-percent').innerText = percent + "% Sold";
+            document.getElementById('progress-bar').style.width = percent + "%";
+        }
+
+        async function submitOrder(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('order-form'));
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            formData.append('telegram_id', tgUser ? tgUser.id : 'GUEST_USER');
+
+            const res = await fetch('/api/buy-ticket', { method: 'POST', body: formData });
+            const result = await res.json();
+            alert(result.message);
+            switchPage('home-page');
+            fetchConfig();
+        }
+
+        function loginAdmin() {
+            if(document.getElementById('admin-user').value === "admin" && document.getElementById('admin-pass').value === "Hunde@2026") {
+                switchPage('admin-dashboard-page');
+                fetchPendingTickets();
+            } else { alert("Wrong credentials!"); }
+        }
+
+        async function fetchPendingTickets() {
+            const res = await fetch('/api/admin/pending');
+            const tickets = await res.json();
+            const container = document.getElementById('admin-pending-list');
+            container.innerHTML = tickets.length === 0 ? "<p class='text-xs text-gray-500'>No pending tickets.</p>" : "";
+            tickets.forEach(t => {
+                const d = document.createElement('div');
+                d.className = "border p-2 rounded bg-white text-xs space-y-1";
+                d.innerHTML = `<b>${t.full_name}</b> (${t.ticket_count} tickets)<br><a href="${t.screenshot_path}" target="_blank" class="text-blue-500 underline">View Receipt</a><br>
+                <button onclick="adminAction(${t.id}, 'Approved')" class="bg-green-500 text-white px-2 py-0.5 rounded">Approve</button>`;
+                container.appendChild(d);
+            });
+        }
+
+        async function adminAction(id, action) {
+            await fetch('/api/admin/action', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ticket_id: id, action: action}) });
+            fetchPendingTickets(); fetchConfig();
+        }
+
+        async function updateCampaign() {
+            const body = {
+                admin_name: "Hunde Tesfaye Jule",
+                ticket_price: parseFloat(document.getElementById('edit-price').value),
+                total_tickets: 1000,
+                prize_image: document.getElementById('edit-img').value,
+                prize_1st: document.getElementById('edit-p1').value,
+                prize_2nd: document.getElementById('edit-p2').value,
+                prize_3rd: document.getElementById('edit-p3').value,
+                countdown_date: "2026-12-31T00:00:00"
+            };
+            await fetch('/api/admin/update-config', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+            alert("Updated!"); switchPage('home-page'); fetchConfig();
+        }
+
+        function switchPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); }
+        function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied!"); }
+        function validateFile(i) { if(i.files[0].size > 10*1024*1024) { alert("Max 10MB!"); i.value=""; } }
+
+        window.onload = () => { fetchConfig(); if(window.Telegram?.WebApp) { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); } };
+    </script>
+</body>
+</html>
