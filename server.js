@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // 1. TELEGRAM BOT SETUP
-const bot = new Telegraf('process.env.BOT_TOKEN'); // Token kee asirra kaayi
+const bot = new Telegraf(process.env.BOT_TOKEN); // Token kee asirra kaayi
 
 bot.start((ctx) => {
     const lang = ctx.from.language_code;
