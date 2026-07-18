@@ -6,7 +6,7 @@ const { Telegraf, Markup } = require('telegraf');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const webAppUrl = 'https://yourdomain.com/app'; // Liinkii WebApp keetii asitti naqi
+const webAppUrl = 'https://milkilottery.onrender.com'; // Liinkii WebApp keetii asitti naqi
 
 app.use(express.json());
 app.use(express.static('public'));
